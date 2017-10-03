@@ -100,8 +100,8 @@ ENV/
 # mypy
 .mypy_cache/
 
-# data
-/training_data*
+# training_data
+/training_*
 /run_*
 run*.mp4
 
@@ -110,3 +110,4 @@ project_video_input/
 project_video_output/
 challenge_video_input/
 challenge_video_output/
+
