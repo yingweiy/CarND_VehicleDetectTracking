@@ -48,7 +48,7 @@ def color_hist(img, nbins=32, bins_range=(0, 256)):
 
 # Define a function to extract features from a list of images
 # Have this function call bin_spatial() and color_hist()
-def single_img_features(image, color_space='RGB', spatial_size=(32, 32),
+def single_img_features(image, gray_image, color_space='RGB', spatial_size=(32, 32),
                      hist_bins=32, orient=9,
                      pix_per_cell=8, cell_per_block=2, hog_channel=0,
                      spatial_feat=True, hist_feat=True, hog_feat=True):
@@ -78,7 +78,7 @@ def single_img_features(image, color_space='RGB', spatial_size=(32, 32),
     if hog_feat == True:
         # Call get_hog_features() with vis=False, feature_vec=True
         if hog_channel == 'GRAY':
-            gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+            #gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
             hog_features = get_hog_features(gray_image, orient,
                                             pix_per_cell, cell_per_block, vis=False, feature_vec=True)
         elif hog_channel == 'ALL':
@@ -107,7 +107,8 @@ def extract_features(imgs,  color_space = 'RGB', spatial_size = (32, 32),
     for file in imgs:
         # Read in each one by one
         image = mpimg.imread(file)[:,:,:3]
-        file_features = single_img_features(image, color_space=color_space, spatial_size = spatial_size,
+        gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        file_features = single_img_features(image, gray_image, color_space=color_space, spatial_size = spatial_size,
                             hist_bins=hist_bins, orient=orient,
                             pix_per_cell=pix_per_cell, cell_per_block=cell_per_block, hog_channel=hog_channel,
                             spatial_feat=spatial_feat, hist_feat=hist_feat, hog_feat=hog_feat)
