@@ -106,7 +106,7 @@ NonCar and their HOG:
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a linear SVM using a combination of color bin and histogram on HLS encoded image in together with HOG features on gray image.
+I trained a RBF SVM using a combination of color bin and histogram on HLS encoded image in together with HOG features on gray image.
 
 ##### Features
 The configuration of to generate these features:
@@ -151,6 +151,8 @@ By experiments, I found with the following paramters, it achieves the best testi
 svc = SVC(C=1e8, gamma=4e-4)
 ```
 
+Initially, I tried with linear SVC, but I encountered the problem of false alarms with real testing images. So that I changed 
+to RBF kernel, and found that it works much better.
 
 ### Sliding Window Search
 
