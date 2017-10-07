@@ -43,7 +43,7 @@ The goals / steps of this project are the following:
 [label4]: ./output_images/label_test4.jpg
 [label5]: ./output_images/label_test5.jpg
 [label6]: ./output_images/label_test6.jpg
-
+[wins]: ./output_images/windows.jpg
 [video]: ./project_video_output.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
@@ -137,6 +137,12 @@ notcar_features = extract_features(notcars, color_space=color_space, orient=orie
                         spatial_feat=spatial_feat, hist_feat=hist_feat, hog_feat=hog_feat)
 ```
 
+The feature vectors are normalized before classification (see the code below 1.3 in `CarDetection_main.ipynb`):
+
+```python
+X_scaler = StandardScaler().fit(X)
+```
+
 ##### SVC Classification
 
 By experiments, I found with the following paramters, it achieves the best testing accuracy of 99.27%.
@@ -150,9 +156,21 @@ svc = SVC(C=1e8, gamma=4e-4)
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+I decided to search window positions all over the image and came up with this:
 
-![alt text][image3]
+![alt text][wins]
+
+The windows are of multiple scales, and the code to generate these search windows is as follows in the ``CarDetection_main.ipynb``.
+
+```python
+windows = []
+horizon_y=400
+for ws in [32, 64, 96, 128, 160, 192, 256]:
+    y_stop = min(horizon_y+ws, image.shape[0])
+    cur_windows = slide_window(image, x_start_stop=[None, None], y_start_stop=[horizon_y, y_stop], 
+                    xy_window=(ws, ws), xy_overlap=(0.75, 0.75))
+    windows += cur_windows    
+```
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
