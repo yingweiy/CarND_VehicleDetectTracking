@@ -180,7 +180,7 @@ Ultimately I searched on two scales using gray HOG features plus spatially binne
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 Here's a [link to my video result](./project_video_output.mp4)
 
-<!-- [![Alt Video Result on YouTube](https://img.youtube.com/vi/F8GE0flblao/0.jpg)](https://youtu.be/F8GE0flblao) -->
+[![Alt Video Result on YouTube](https://img.youtube.com/vi/qDggJQR6zpE/0.jpg)](https://youtu.be/qDggJQR6zpE)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
