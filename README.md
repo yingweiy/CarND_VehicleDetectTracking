@@ -58,8 +58,8 @@ You're reading it!
 
 ##### Program Files:
 
-* `CarDetection.ipynb`: the main program in ipynb format
-* `CarDetection.pdf`: the main program in PDF format
+* `CarDetection_main.ipynb`: the main program in ipynb format
+* `CarDetection_main.pdf`: the main program in PDF format
 * `lessonFunctions.py`: supported functions
 
 
