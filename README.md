@@ -76,7 +76,7 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the saturation channel (from YCrCb encoded image) and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(1, 1)`:
+Here is an example using the Y channel from YCrCb encoded image and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(1, 1)`:
 
 Car and their HOG:
 
@@ -91,6 +91,7 @@ NonCar and their HOG:
 
 I tried various combinations of parameters and found that the best configuration is as follows:
 * input format: YCrCb
+* channel: 'ALL'
 * orientations: 9
 * pixcels per cell: 8
 * cells per block: 1
@@ -254,6 +255,7 @@ reported.
 * The heatmap from multiple frames make the results more stable.
 
 The problems that I can observe from the resulting video:
+* The performance of single frame prediction is still very slow. It may be improved with C or GPU techniques.
 * There is still false alarm, such as in the left tree region. 
 
 To improve it, I think a deep neural network approach may be better than the feature engineering approach.
