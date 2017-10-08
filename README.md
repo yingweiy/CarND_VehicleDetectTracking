@@ -247,6 +247,7 @@ heat = apply_threshold(heat, threshold)
 * The use of LinearSVC needs a large C value to reduce overfitting.
 * The use of color bin and histogram together with HOG can improve the overall accuracy.
 * The YCrCb encoding outperform other encodings in my experiements. 
+* The heatmap from multiple frames make the results more stable.
 
 The problems that I can observe from the resulting video:
 * There is still false alarm, such as in the lawn. 
