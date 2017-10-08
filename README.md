@@ -247,10 +247,10 @@ reported.
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-* The RBF kernel SVC outpeforms the linear SVC.
+* The RBF kernel SVC outperforms the linear SVC.
 * The use of SVC needs a large C value and small gamma to reduce overfitting.
 * The use of color bin and histogram together with HOG can improve the overall accuracy.
-* The YCrCb encoding outperform other encodings in my experiements. 
+* The YCrCb encoding outperform other encodings in my experiments. 
 * The heatmap from multiple frames make the results more stable.
 
 The problems that I can observe from the resulting video:
