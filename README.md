@@ -97,7 +97,7 @@ I tried various combinations of parameters and found that the best configuration
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a Linear SVM using a combination of color bin and histogram on YCrCb encoded image in together with HOG features on gray image.
+I trained a SVM using a combination of color bin and histogram on YCrCb encoded image in together with HOG features on gray image.
 
 ##### Features
 The configuration of to generate these features:
@@ -136,10 +136,10 @@ X_scaler = StandardScaler().fit(X)
 
 ##### SVC Classification
 
-By experiments, I found with the following paramters, it achieves the best testing accuracy of 98.4%.
+By experiments, I found with the following paramters, it achieves the best testing accuracy of 99.35%.
 
 ```python
-svc = LinearSVC(C=1e8)
+svc = SVC(C=1e8, gamma=4e-4)
 ```
 
 ### Sliding Window Search
@@ -179,7 +179,7 @@ Ultimately I searched on two scales using gray HOG features plus spatially binne
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 Here's a [link to my video result](./project_video_output.mp4)
 
-[![Alt Video Result on YouTube](https://img.youtube.com/vi/F8GE0flblao/0.jpg)](https://youtu.be/F8GE0flblao)
+<!-- [![Alt Video Result on YouTube](https://img.youtube.com/vi/F8GE0flblao/0.jpg)](https://youtu.be/F8GE0flblao) -->
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
@@ -240,17 +240,21 @@ threshold = 1+len(history)//2
 heat = apply_threshold(heat, threshold)
 ```
 
+Here the threshold is defined as `1+len(history)//2` in order to make sure only the dominant feature across these frames are 
+reported.
+
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-* The use of LinearSVC needs a large C value to reduce overfitting.
+* The RBF kernel SVC outpeforms the linear SVC.
+* The use of SVC needs a large C value and small gamma to reduce overfitting.
 * The use of color bin and histogram together with HOG can improve the overall accuracy.
 * The YCrCb encoding outperform other encodings in my experiements. 
 * The heatmap from multiple frames make the results more stable.
 
 The problems that I can observe from the resulting video:
-* There is still false alarm, such as in the lawn. 
+* There is still false alarm, such as in the left tree region. 
 
 To improve it, I think a deep neural network approach may be better than the feature engineering approach.
   
