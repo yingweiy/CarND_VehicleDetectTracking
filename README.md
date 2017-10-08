@@ -76,7 +76,7 @@ I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an 
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
-Here is an example using the saturation channel (from HLS encoded image) and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(1, 1)`:
+Here is an example using the saturation channel (from YCrCb encoded image) and HOG parameters of `orientations=9`, `pixels_per_cell=(8, 8)` and `cells_per_block=(1, 1)`:
 
 Car and their HOG:
 
@@ -90,33 +90,24 @@ NonCar and their HOG:
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
 I tried various combinations of parameters and found that the best configuration is as follows:
-* input format: gray image
+* input format: YCrCb
 * orientations: 9
 * pixcels per cell: 8
 * cells per block: 1
 
-The examples of car and their HOG:
-
-![alt text][carhog]
-
-NonCar and their HOG:
-
-![alt text][noncarhog]
-
-
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
-I trained a RBF SVM using a combination of color bin and histogram on HLS encoded image in together with HOG features on gray image.
+I trained a Linear SVM using a combination of color bin and histogram on YCrCb encoded image in together with HOG features on gray image.
 
 ##### Features
 The configuration of to generate these features:
 
 ```python
-color_space = 'HLS' 
+color_space = 'YCrCb' 
 orient = 9
 pix_per_cell = 8
 cell_per_block = 1
-hog_channel = 'GRAY' 
+hog_channel = 'ALL' 
 hist_bins = 16
 spatial_size=(8, 8)
 spatial_feat = True
@@ -145,14 +136,11 @@ X_scaler = StandardScaler().fit(X)
 
 ##### SVC Classification
 
-By experiments, I found with the following paramters, it achieves the best testing accuracy of 99.27%.
+By experiments, I found with the following paramters, it achieves the best testing accuracy of 98.4%.
 
 ```python
-svc = SVC(C=1e8, gamma=4e-4)
+svc = LinearSVC(C=1e8)
 ```
-
-Initially, I tried with linear SVC, but I encountered the problem of false alarms with real testing images. So that I changed 
-to RBF kernel, and found that it works much better.
 
 ### Sliding Window Search
 
@@ -167,7 +155,7 @@ The windows are of multiple scales, and the code to generate these search window
 ```python
 windows = []
 horizon_y=400
-for ws in [32, 64, 96, 128, 160, 192, 256]:
+for ws in [64, 96, 128, 160, 192, 256]:
     y_stop = min(horizon_y+ws, image.shape[0])
     cur_windows = slide_window(image, x_start_stop=[None, None], y_start_stop=[horizon_y, y_stop], 
                     xy_window=(ws, ws), xy_overlap=(0.75, 0.75))
@@ -236,16 +224,31 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 ---
 
+#### Smooth over the bounding box across frame
+In order to smooth across the video frames, 8 frames are used in a history buffer. This is based on the observation that
+ the same car appears close across frames. 
+
+```python
+from collections import deque
+history = deque(maxlen = 8)
+...
+history.append(heat)
+heat = np.sum(np.array(history), axis=0)
+threshold = 1+len(history)//2
+
+# Apply threshold to help remove false positives
+heat = apply_threshold(heat, threshold)
+```
+
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-* The use of SVC with RBF kernel greatly improves the results. The classifier is very sensitive to the C and gamma paramters.
+* The use of LinearSVC needs a large C value to reduce overfitting.
 * The use of color bin and histogram together with HOG can improve the overall accuracy.
-* The HLS encoding outperform other encodings in my experiements. 
+* The YCrCb encoding outperform other encodings in my experiements. 
 
 The problems that I can observe from the resulting video:
-* The bonding box looks kind of shaky.
 * There is still false alarm, such as in the lawn. 
 
 To improve it, I think a deep neural network approach may be better than the feature engineering approach.
